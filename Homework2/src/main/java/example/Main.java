@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Parser parser = new Parser();
-        Tree tree = parser.parse(new FileInputStream("input.txt"));
+        Tree tree = parser.parse(new FileInputStream("Homework2/input.txt"));
         watchTree(tree, "");
     }
 }
