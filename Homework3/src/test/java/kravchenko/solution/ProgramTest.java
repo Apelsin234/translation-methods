@@ -134,19 +134,38 @@ public class ProgramTest {
         run(code, answer);
     }
 
+    @Test
+    public void test8() {
+        String code = "int main() {\n" +
+                "}" +
+                "void foo(int a, int b, int c)  { return;}" +
+                "int sqr(int x) { return x * x;}";
+        String answer = "int main() {\n" +
+                "}\n" +
+                "\n" +
+                "void foo(int a, int b, int c) {\n" +
+                "    return;\n" +
+                "}\n" +
+                "\n" +
+                "int sqr(int x) {\n" +
+                "    return x * x;\n" +
+                "}";
+        run(code, answer);
+    }
+
     private void run(String code, String answer) {
         CPPLexer lexer = new CPPLexer(CharStreams.fromString(code));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CPPParser parser = new CPPParser(tokens);
         Program program = parser.start().v;
         String formatCode = program.getFormatProgram();
-        /*System.out.println("--------------------------------------------------");
+        System.out.println("--------------------------------------------------");
         System.out.println("Before");
         System.out.println(code);
         System.out.println("--------------------------------------------------");
         System.out.println("After");
         System.out.println(formatCode);
-        System.out.println("--------------------------------------------------");*/
+        System.out.println("--------------------------------------------------");
         Assert.assertEquals(answer, formatCode);
     }
 

@@ -71,3 +71,4 @@ target/
 *.ear
 
 *.png
+generated-sources/

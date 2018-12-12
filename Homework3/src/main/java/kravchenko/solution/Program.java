@@ -15,7 +15,10 @@ public class Program {
 
     public String getFormatProgram() {
         final StringBuilder builder = new StringBuilder();
-        list.forEach(it -> {it.getFormatProgram(builder, 0);});
-        return builder.toString();
+        list.forEach(it -> {
+            it.getFormatProgram(builder, 0);
+            builder.append("\n\n");
+        });
+        return builder.toString().trim();
     }
 }
