@@ -19,6 +19,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Parser parser = new Parser();
         Tree tree = parser.parse(new FileInputStream("Homework2/input.txt"));
-        toPicture("picture.png", tree);
+        toPicture("Homework2/picture.png", tree);
     }
 }

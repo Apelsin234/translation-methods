@@ -4,6 +4,7 @@ grammar CPP;
 package antlr;
 
 import kravchenko.solution.expression.Expression;
+import kravchenko.solution.expression.ForDecl;
 import kravchenko.solution.expression.BinaryExpression;
 import kravchenko.solution.expression.ExprInParent;
 import kravchenko.solution.expression.FunctionCall;
@@ -14,6 +15,8 @@ import kravchenko.solution.state.State;
 import kravchenko.solution.state.AsgnState;
 import kravchenko.solution.state.BlockState;
 import kravchenko.solution.state.IfState;
+import kravchenko.solution.state.WhileState;
+import kravchenko.solution.state.ForState;
 import kravchenko.solution.state.PrintState;
 import kravchenko.solution.state.ReturnState;
 import kravchenko.solution.state.VarState;
@@ -58,10 +61,16 @@ stat returns [State v]
     :   block   {$v = new BlockState($block.v);}
     |   varDecl {$v = new VarState($varDecl.v);}
     |   'if' '(' expr ')' st1=stat ('else' st2=stat)? {$v = new IfState($expr.v, $st1.v, $st2.ctx == null ? null : $st2.v);}
+    |   'while' '(' expr ')' stat {$v = new WhileState($expr.v, $stat.v);}
+    |   'for' '('(be=forExpr)? ';' (me=forExpr)? ';' (ae=forExpr)? ')' stat
+    {$v = new ForState($be.ctx != null ? $be.v : null, $me.ctx != null ? $me.v : null, $ae.ctx != null ? $ae.v : null, $stat.v);}
     |   'return' expr? ';' {$v = new ReturnState($expr.ctx == null ? null : $expr.v);}
     |   'printf' '(' expr ')' ';' {$v = new PrintState($expr.v);}
     |   ex1=expr ('=' ex2=expr )? ';' {$v = new AsgnState($ex1.v, $ex2.ctx == null ? null : $ex2.v);}
     ;
+forExpr returns [Expression v]
+    :   expr    {$v = $expr.v;}
+    |   (TYPE)? NAME ('=' expr)? {$v = new ForDecl($TYPE.text, $NAME.text, $expr.ctx == null ? null : $expr.v);};
 
 varDecl returns [Variable v]
     : TYPE NAME ('=' expr)? ';' {$v = new Variable($TYPE.text, $NAME.text, $expr.ctx == null ? null : $expr.v);}

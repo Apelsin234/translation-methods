@@ -25,16 +25,24 @@ public class Parser {
                     lex.nextToken();
                     // T
                     Tree t = T();
-                    // END
+                    // ;
+                    if (lex.curToken() != Token.SEMICOLON) {
+                        throw new ParseException("; expected at position", lex.curPos());
+                    }
+                    lex.nextToken();
                     if (lex.curToken() != Token.END) {
                         throw new ParseException("END expected at position", lex.curPos());
                     }
-                    return new Tree("S", new Tree("function"), x, new Tree(":"), t);
+                    return new Tree("S", new Tree("function"), x, new Tree(":"), t, new Tree(";"));
                 } else {
+                    if (lex.curToken() != Token.SEMICOLON) {
+                        throw new ParseException("; expected at position", lex.curPos());
+                    }
+                    lex.nextToken();
                     if (lex.curToken() != Token.END) {
                         throw new ParseException("END expected at position", lex.curPos());
                     }
-                    return new Tree("S", new Tree("procedure"), x);
+                    return new Tree("S", new Tree("procedure"), x, new Tree(";"));
                 }
             default:
                 throw new AssertionError("Not expected token [" + lex.curToken() + "] at position " + lex.curPos());
@@ -46,19 +54,28 @@ public class Parser {
             case NAME:
                 // name
                 Tree n = N();
-                // (
-                if (lex.curToken() != Token.LPAREN) {
-                    throw new ParseException("( expected at position", lex.curPos());
+                switch (lex.curToken()) {
+                    case LPAREN:
+
+                        // (
+
+                        lex.nextToken();
+                        // K
+                        Tree k = K();
+
+                        // )
+                        if (lex.curToken() != Token.RPAREN) {
+                            throw new ParseException("( expected at position", lex.curPos());
+                        }
+                        lex.nextToken();
+                        return new Tree("X", n, new Tree("("), k, new Tree(")"));
+                    case SEMICOLON:
+                    case COLON:
+                        return new Tree("X", n);
+                    default:
+                        throw new ParseException("expected (\'(\' or \':\' or \';\') at position", lex.curPos());
+
                 }
-                lex.nextToken();
-                // K
-                Tree k = K();
-                // )
-                if (lex.curToken() != Token.RPAREN) {
-                    throw new ParseException("( expected at position", lex.curPos());
-                }
-                lex.nextToken();
-                return new Tree("X", n, new Tree("("), k, new Tree(")"));
             default:
                 throw new AssertionError("Not expected token [" + lex.curToken() + "] at position " + lex.curPos());
         }
@@ -100,7 +117,7 @@ public class Parser {
                 Tree t = T();
                 // Y'
                 Tree yPrime = YPrime();
-                return new Tree("Y", p, new Tree(":"),t, yPrime);
+                return new Tree("Y", p, new Tree(":"), t, yPrime);
             default:
                 throw new AssertionError("Not expected token [" + lex.curToken() + "] at position " + lex.curPos());
         }
@@ -125,7 +142,7 @@ public class Parser {
                 // N
                 Tree n = N();
                 // P'
-                return new Tree("P",n, PPrime());
+                return new Tree("P", n, PPrime());
             default:
                 throw new AssertionError("Not expected token [" + lex.curToken() + "] at position " + lex.curPos());
         }

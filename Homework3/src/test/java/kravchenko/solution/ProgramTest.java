@@ -153,6 +153,69 @@ public class ProgramTest {
         run(code, answer);
     }
 
+    @Test
+    public void test9() {
+        String code = "int main() {\n" +
+                "for (int i = 0; i < 7; i = i + 1)    {int x = 0;}" +
+                "}";
+        String answer = "int main() {\n" +
+                "    for (int i = 0; i < 7; i = i + 1) {\n" +
+                "        int x = 0;\n" +
+                "    }\n" +
+                "}";
+        run(code, answer);
+    }
+
+    @Test
+    public void test10() {
+        String code = "int main() {\n" +
+                "while (true)    {int x = 0;}" +
+                "}";
+        String answer = "int main() {\n" +
+                "    while (true) {\n" +
+                "        int x = 0;\n" +
+                "    }\n" +
+                "}";
+        run(code, answer);
+    }
+
+    @Test
+    public void test11() {
+        String code = "int main() {\n" +
+                "for (;;)    {int x = 0;}" +
+                "}";
+        String answer = "int main() {\n" +
+                "    for (;;) {\n" +
+                "        int x = 0;\n" +
+                "    }\n" +
+                "}";
+        run(code, answer);
+    }
+    @Test
+    public void test12() {
+        String code = "int main() {\n" +
+                "for (a = 7; a < 8;)    {int x = 0;}" +
+                "}";
+        String answer = "int main() {\n" +
+                "    for (a = 7; a < 8;) {\n" +
+                "        int x = 0;\n" +
+                "    }\n" +
+                "}";
+        run(code, answer);
+    }
+    @Test
+    public void test13() {
+        String code = "int main() {\n" +
+                "for (; a < 8;)    {int x = 0;}" +
+                "}";
+        String answer = "int main() {\n" +
+                "    for (; a < 8;) {\n" +
+                "        int x = 0;\n" +
+                "    }\n" +
+                "}";
+        run(code, answer);
+    }
+
     private void run(String code, String answer) {
         CPPLexer lexer = new CPPLexer(CharStreams.fromString(code));
         CommonTokenStream tokens = new CommonTokenStream(lexer);

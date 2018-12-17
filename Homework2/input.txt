@@ -1,1 +1,1 @@
-function abc(a, b, c: integer; x,y,z: real; ty:char; qw:boolean; gt:char): real
+function abc: real;
